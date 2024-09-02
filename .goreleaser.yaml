@@ -23,7 +23,7 @@ release:
 
 blobs:
   - provider: gs
-    bucket: {{ .Env.YOUR_BUCKET }}
+    bucket: ${_YOUR_BUCKET}
 
 archives:
   - format: tar.gz
