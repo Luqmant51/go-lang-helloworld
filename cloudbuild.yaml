@@ -33,6 +33,7 @@ steps:
 timeout: '1800s'
 options:
   logging: CLOUD_LOGGING_ONLY
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
   env:
