@@ -1,10 +1,7 @@
 steps:
   - name: 'goreleaser/goreleaser:latest'
     id: 'run-goreleaser'
-    entrypoint: 'sh'
     args:
-      - '-c'
-      - |
         goreleaser --config .goreleaser.yaml
 
 timeout: 1200s  # Optional: Increase timeout if necessary
