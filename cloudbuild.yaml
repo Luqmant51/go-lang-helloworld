@@ -9,7 +9,7 @@ steps:
         go mod download  
   - name: 'goreleaser/goreleaser:latest'
     id: 'run-goreleaser'
-    entrypoint: 'sh'
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
