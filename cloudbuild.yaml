@@ -24,7 +24,8 @@ logsBucket: 'gs://dev-docs-releases'
 # Upload the build artifacts to your GCS bucket
 artifacts:
   objects:
-    location: 'gs://dev-docs-releases/releases/'
-    paths: ['dist/**']  # Upload all files from the dist/ directory
+    location: 'gs://dev-docs-releases/releases/{{ .Tag }}/'
+    paths:
+      - 'dist/{{ .Tag }}/**'
 
 timeout: 1200s  # Optional: Increase timeout if necessary
