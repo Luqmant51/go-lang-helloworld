@@ -1,4 +1,3 @@
-# Cloud Build configuration file
 steps:
   # Step 1: Set up Go environment with Go 1.23.0
   - name: 'golang:1.23.0'
@@ -17,7 +16,6 @@ steps:
     args:
       - '-c'
       - |
-        # Run GoReleaser to create a release
         goreleaser release --clean
 
   # Step 3: Upload dist to storage
@@ -27,12 +25,11 @@ steps:
     script: |
       #!/usr/bin/env bash
       if [ ! -z "$TAG_NAME" ]; then
-        gcloud storage cp ./dist/* gs://dev-docs-releases/main
+        gcloud storage cp ./dist/* gs://dev-docs-releases/main/"$TAG_NAME"
+      elif
+        gcloud storage cp ./dist/* gs://dev-docs-releases/dist
 
 options:
-  # Use only Cloud Logging for logging
   logging: CLOUD_LOGGING_ONLY
-  
-  # Specify the worker pool to use for the build
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
