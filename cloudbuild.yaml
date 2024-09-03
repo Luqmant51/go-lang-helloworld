@@ -22,12 +22,12 @@ steps:
 
   # Upload artifacts to Google Cloud Storage
   - id: “Upload dist to storage“
-  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-  automapSubstitutions: true
-  script: |
-    #!/usr/bin/env bash
-    if [ ! -z "$TAG_NAME" ]; then
-      gcloud storage cp ./dist/* gs://dev-docs-releases/dist
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    automapSubstitutions: true
+    script: |
+      #!/usr/bin/env bash
+      if [ ! -z "$TAG_NAME" ]; then
+        gcloud storage cp ./dist/* gs://dev-docs-releases/dist
 
 # Set the timeout for the build (optional)
 timeout: '1800s'
