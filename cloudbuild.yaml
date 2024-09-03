@@ -17,6 +17,10 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml --snapshot
+artifacts:
+  objects:
+    location: 'gs://dev-docs-releases/main/${TAG_NAME}/'
+    paths: ['dist/**']
 options:
   logging: CLOUD_LOGGING_ONLY
   pool:
