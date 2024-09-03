@@ -21,7 +21,7 @@ steps:
       - 'GITHUB_REF=refs/tags/${_TAG_NAME}'
 
   # Upload artifacts to Google Cloud Storage
-  - id: “Upload dist to storage“
+  - id: "Upload dist to storage"
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     automapSubstitutions: true
     script: |
@@ -35,9 +35,5 @@ options:
   logging: CLOUD_LOGGING_ONLY
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
-
-
-# You can specify options here
-options:
   env:
     - 'PATH=/workspace/go/bin:$$PATH'
