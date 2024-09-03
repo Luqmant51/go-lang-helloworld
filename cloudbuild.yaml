@@ -33,11 +33,11 @@ steps:
 timeout: '1800s'
 options:
   logging: CLOUD_LOGGING_ONLY
-  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
-  logs_bucket: 'gs://dev-docs-releases'
-
+  logsBucket: 'gs://dev-docs-releases'
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
   env:
     - 'PATH=/workspace/go/bin:$$PATH'
-    
+
+  env:
+    - 'PATH=/workspace/go/bin:$$PATH'
