@@ -34,13 +34,14 @@ steps:
       if [ ! -z "$TAG_NAME" ]; then
         gcloud storage cp ./dist/* gs://dev-docs-releases/main/{{$TAG_NAME}}/
 
+# Set the timeout for the build (optional)
 timeout: '1800s'
 
 options:
   logging: CLOUD_LOGGING_ONLY
 
-pool:
-  name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
+  pool:
+    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
 
-env:
-  - 'PATH=/workspace/go/bin:$$PATH'
+  env:
+    - 'PATH=/workspace/go/bin:$$PATH'
