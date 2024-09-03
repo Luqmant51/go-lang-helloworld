@@ -9,3 +9,20 @@ steps:
         apt-get update && apt-get install -y golang-go
         go version
         go mod download
+
+
+
+
+
+
+
+
+
+# Set the timeout for the build (optional)
+timeout: '1800s'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+  pool:
+    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
