@@ -1,3 +1,4 @@
+# Cloud Build configuration file
 steps:
   # Step 1: Set up Go environment with Go 1.23.0
   - name: 'golang:1.23.0'
@@ -7,7 +8,7 @@ steps:
       - '-c'
       - |
         go version
-        go mod download  # Download Go module dependencies
+        go mod download
 
   # Step 2: Run GoReleaser using its Docker image
   - name: 'goreleaser/goreleaser:latest'
@@ -16,12 +17,22 @@ steps:
     args:
       - '-c'
       - |
-        goreleaser --config .goreleaser.yaml --snapshot
-artifacts:
-  objects:
-    location: 'gs://dev-docs-releases/main/"{$TAG_NAME}"/'
-    paths: ['dist/**']
+        # Run GoReleaser to create a release
+        goreleaser release --clean
+
+  # Step 3: Upload dist to storage
+  - id: "Upload dist to storage"
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    automapSubstitutions: true
+    script: |
+      #!/usr/bin/env bash
+      if [ ! -z "$TAG_NAME" ]; then
+        gcloud storage cp ./dist/* gs://dev-docs-releases/main/"$TAG_NAME"
+
 options:
+  # Use only Cloud Logging for logging
   logging: CLOUD_LOGGING_ONLY
+  
+  # Specify the worker pool to use for the build
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
