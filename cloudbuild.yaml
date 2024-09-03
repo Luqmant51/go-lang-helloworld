@@ -17,9 +17,20 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml --snapshot
+
+  # Step 3: Get the tag name from the git push command
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'get-tag-name'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        TAG_NAME=$(git describe --tags --abbrev=0)
+        echo "TAG_NAME=${TAG_NAME}" >> $BASH_ENV
+
 artifacts:
   objects:
-    location: 'gs://dev-docs-releases/main/${{TAG_NAME}}/'
+    location: 'gs://bucket_name/main/${TAG_NAME}/'
     paths: ['dist/**']
 options:
   logging: CLOUD_LOGGING_ONLY
