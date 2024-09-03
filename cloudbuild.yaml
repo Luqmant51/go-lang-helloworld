@@ -1,32 +1,19 @@
 steps:
-  # Install Go
-  - name: 'gcr.io/cloud-builders/go'
-    args: ['install', '.']
-    env: ['GO111MODULE=on']
-
-  # Install GoReleaser
-  - name: 'gcr.io/cloud-builders/go'
-    args: ['install', 'github.com/goreleaser/goreleaser@latest']
-    env: ['GO111MODULE=on']
-
-  # Run GoReleaser
-  - name: 'gcr.io/cloud-builders/go'
+  # Step 1: Set up Go environment with Go 1.23.0
+  - name: 'golang:1.23.0'
+    id: 'setup-go'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        export GOPATH=/workspace/go
-        export GOBIN=/workspace/go/bin
-        export PATH=$GOBIN:$PATH
-        goreleaser release --rm-dist
+        go version
+        go mod download  # Download Go module dependencies
 
-  # Upload artifacts to Google Cloud Storage
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['-m', 'cp', '-r', 'dist/*', 'gs://your-bucket-name/']
-
-# Set the timeout for the build (optional)
-timeout: '1800s'
-options:
-  logging: CLOUD_LOGGING_ONLY
-  pool:
-    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
+  # Step 2: Run GoReleaser using its Docker image
+  - name: 'goreleaser/goreleaser:latest'
+    id: 'run-goreleaser'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        goreleaser --config .goreleaser.yaml --snapshot
