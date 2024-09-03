@@ -1,13 +1,8 @@
 steps:
   # Install Go (if needed)
   - name: 'golang:1.20'
-    id: 'setup-go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        go version
-        go mod download
+    entrypoint: 'go'
+    args: ['version']
 
   # Install GoReleaser
   - name: 'golang:1.20'
