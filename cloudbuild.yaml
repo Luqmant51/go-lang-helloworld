@@ -1,28 +1,30 @@
 steps:
-  # Install Go (if needed)
-  - name: 'golang:1.20'
-    entrypoint: 'go'
-    args: ['version']
+  # Step 1: Set up Go environment with Go 1.23.0
+  - name: 'golang:1.23.0'
+    id: 'setup-go'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        go version
+        go mod download  # Download Go module dependencies
 
-  # Install GoReleaser
-  - name: 'golang:1.20'
-    entrypoint: 'go'
-    args: ['install', 'github.com/goreleaser/goreleaser@latest']
-    env:
-      - 'GO111MODULE=on'
-
-
-
-
-
-
-
-
-
-
-# Set the timeout for the build (optional)
-timeout: '1800s'
-
+  # Step 2: Run GoReleaser using its Docker image
+  - name: 'goreleaser/goreleaser:latest'
+    id: 'run-goreleaser'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        goreleaser release
+# Upload artifacts to Google Cloud Storage
+  - id: "Upload dist to storage"
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    automapSubstitutions: true
+    script: |
+      #!/usr/bin/env bash
+      if [ ! -z "$TAG_NAME" ]; then
+        gcloud storage cp ./dist/* gs://dev-docs-releases/main/{{$TAG_NAME}}/
 options:
   logging: CLOUD_LOGGING_ONLY
 
