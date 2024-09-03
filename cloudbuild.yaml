@@ -1,48 +1,27 @@
 steps:
-  # Step to set up Go environment
+  # Step 1: Set up Go environment with Go 1.23.0
   - name: 'golang:1.23.0'
     id: 'setup-go'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "Setting up Go environment..."
         go version
-
-  # Step to install GoReleaser
-  - name: 'alpine:latest'
-    id: 'install-goreleaser'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        echo "Installing GoReleaser..."
-        apk add --no-cache curl git
-        curl -sL https://github.com/goreleaser/goreleaser/releases/download/v1.15.0/goreleaser_Linux_x86_64.tar.gz | tar xz
-        mv goreleaser /usr/local/bin/
-        chmod +x /usr/local/bin/goreleaser
-        goreleaser --version
-
-  # Step to fetch Git tags (if needed)
-  - name: 'alpine:latest'
-    id: 'fetch-git-tags'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        echo "Fetching Git tags..."
-        apk add --no-cache git
-        git fetch --tags
-
-  # Step to run GoReleaser using the script file
-  - name: 'alpine:latest'
+        go mod download  # Download Go module dependencies
+  # Step 2: Run GoReleaser using its Docker image
+  - name: 'goreleaser/goreleaser:latest'
     id: 'run-goreleaser'
     entrypoint: 'sh'
     args:
       - '-c'
       - |
-        echo "Running GoReleaser script..."
-        sh run-goreleaser.sh
-
-   options:
-     logging: 'CLOUD_LOGGING_ONLY'
+        goreleaser --config .goreleaser.yaml
+        goreleaser --config .goreleaser.yaml --snapshot
+# Specify the logs bucket to resolve the build error
+logsBucket: 'gs://dev-docs-releases'
+# Upload the build artifacts to your GCS bucket
+artifacts:
+  objects:
+    location: 'gs://dev-docs-releases/releases/'
+    paths: ['dist/**']  # Upload all files from the dist/ directory
+timeout: 1200s  # Optional: Increase timeout if necessary
