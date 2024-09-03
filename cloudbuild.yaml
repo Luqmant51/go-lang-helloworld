@@ -1,20 +1,28 @@
 steps:
-  # Step 1: Set up Go environment with Go 1.23.0
-  - name: 'golang:1.23.0'
+  # Step to set up Go
+  - name: 'golang:1.20'
     id: 'setup-go'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         go version
-        go mod download  # Download Go module dependencies
 
-  # Step 2: Run GoReleaser using its Docker image
-  - name: 'goreleaser/goreleaser:latest'
+  # Step to install GoReleaser
+  - name: 'alpine:latest'
+    id: 'install-goreleaser'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        apk add --no-cache curl
+        curl -sL https://git.io/goreleaser | sh
+
+  # Step to run GoReleaser
+  - name: 'alpine:latest'
     id: 'run-goreleaser'
     entrypoint: 'sh'
     args:
       - '-c'
       - |
-        goreleaser --config .goreleaser.yaml --snapshot
-
+        goreleaser --config .goreleaser.yaml
