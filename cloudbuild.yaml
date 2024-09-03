@@ -1,9 +1,12 @@
 steps:
-  - name: 'goreleaser/goreleaser:latest'
-    id: 'run-goreleaser'
+  - name: 'goreleaser/goreleaser'  # GoReleaser Docker image
+    id: 'release'
+    entrypoint: 'bash'
     args:
-        goreleaser --config .goreleaser.yaml
+      - '-c'
+      - |
+        goreleaser release --config .goreleaser.yaml
 
-timeout: 1200s  # Optional: Increase timeout if necessary
+timeout: 1200s
 options:
   logging: CLOUD_LOGGING_ONLY
