@@ -1,0 +1,59 @@
+steps:
+  # Step 1: Pre-build hook (go mod tidy)
+  - name: 'golang:1.23.0'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        go mod tidy
+
+  # Step 2: Build for different platforms
+  - name: 'golang:1.23.0'
+    id: 'build-linux-amd64'
+    env: ['CGO_ENABLED=0']
+    args: ['go', 'build', '-o', 'output/linux/amd64/{{ .ProjectName }}']
+    dir: './'
+
+  - name: 'golang:1.23.0'
+    id: 'build-linux-arm64'
+    env: ['CGO_ENABLED=0']
+    args: ['go', 'build', '-o', 'output/linux/arm64/{{ .ProjectName }}']
+    dir: './'
+
+  - name: 'golang:1.23.0'
+    id: 'build-windows-amd64'
+    env: ['CGO_ENABLED=0']
+    args: ['go', 'build', '-o', 'output/windows/amd64/{{ .ProjectName }}.exe']
+    dir: './'
+
+  - name: 'golang:1.23.0'
+    id: 'build-darwin-amd64'
+    env: ['CGO_ENABLED=0']
+    args: ['go', 'build', '-o', 'output/darwin/amd64/{{ .ProjectName }}']
+    dir: './'
+
+  # Step 3: Archive the build outputs into tar.gz or zip format
+  - name: 'gcr.io/cloud-builders/tar'
+    args: ['czf', 'release/{{ .ProjectName }}_Linux_x86_64.tar.gz', '-C', 'output/linux/amd64', '.']
+
+  - name: 'gcr.io/cloud-builders/tar'
+    args: ['czf', 'release/{{ .ProjectName }}_Linux_arm64.tar.gz', '-C', 'output/linux/arm64', '.']
+
+  - name: 'gcr.io/cloud-builders/zip'
+    args: ['-r', 'release/{{ .ProjectName }}_Windows_x86_64.zip', '.']
+    dir: 'output/windows/amd64'
+
+  - name: 'gcr.io/cloud-builders/tar'
+    args: ['czf', 'release/{{ .ProjectName }}_Darwin_x86_64.tar.gz', '-C', 'output/darwin/amd64', '.']
+
+  # Step 4: Upload the archives to the GCS bucket
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['gsutil', 'cp', 'release/*', 'gs://dev-docs-releases/']
+
+artifacts:
+  objects:
+    location: 'gs://dev-docs-releases/'
+    paths: ['release/**']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
