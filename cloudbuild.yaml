@@ -8,3 +8,5 @@ steps:
         goreleaser release
 
 timeout: 1200s  # Optional: Increase timeout if necessary
+options:
+  logging: CLOUD_LOGGING_ONLY
