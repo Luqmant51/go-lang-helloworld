@@ -1,35 +1,43 @@
 steps:
-  # Step 1: Set up Go environment with Go 1.23.0
-  - name: 'golang:1.23.0'
-    id: 'setup-go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        go version
-        go mod download
+  # Install Go (if needed)
+  - name: 'golang:1.20'
+    entrypoint: 'go'
+    args: ['version']
 
-  # Step 2: Run GoReleaser using its Docker image
-  - name: 'goreleaser/goreleaser:latest'
-    id: 'run-goreleaser'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        goreleaser release --clean
+  # Install GoReleaser
+  - name: 'golang:1.20'
+    entrypoint: 'go'
+    args: ['install', 'github.com/goreleaser/goreleaser@latest']
+    env:
+      - 'GO111MODULE=on'
 
-  # Step 3: Upload dist to storage
-  - id: "Upload dist to storage"
-    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    automapSubstitutions: true
-    script: |
-      #!/usr/bin/env bash
-      if [ ! -z "$TAG_NAME" ]; then
-        gcloud storage cp ./dist/* gs://dev-docs-releases/main/"$TAG_NAME"
-      elif
-        gcloud storage cp ./dist/* gs://dev-docs-releases/dist
+  # Run GoReleaser
+  - name: 'golang:1.20'
+    entrypoint: 'goreleaser'
+    args: ['release', '--rm-dist']
+    env:
+      - 'GOPATH=/workspace/go'
+      - 'GOBIN=/workspace/go/bin'
+      - 'GITHUB_REF=refs/tags/${_TAG_NAME}'
 
+  # Upload artifacts to Google Cloud Storage
+  - id: “Upload dist to storage“
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  automapSubstitutions: true
+  script: |
+    #!/usr/bin/env bash
+    if [ ! -z "$TAG_NAME" ]; then
+      gcloud storage cp ./dist/* gs://dev-docs-releases/dist
+
+# Set the timeout for the build (optional)
+timeout: '1800s'
+
+# Substitutions
+substitutions:
+  _BUCKET_NAME: your-bucket-name  # Default value, can be overridden
+  _TAG_NAME: v0.0.0  # Default value, should be overridden when triggering the build
+
+# You can specify options here
 options:
-  logging: CLOUD_LOGGING_ONLY
-  pool:
-    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
+  env:
+    - 'PATH=/workspace/go/bin:$$PATH'
