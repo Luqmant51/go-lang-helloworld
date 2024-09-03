@@ -1,3 +1,6 @@
+substitutions:
+  _TAG_NAME: $(git describe --tags --abbrev=0)
+
 steps:
   # Step 1: Set up Go environment with Go 1.23.0
   - name: 'golang:1.23.0'
@@ -18,19 +21,9 @@ steps:
       - |
         goreleaser --config .goreleaser.yaml --snapshot
 
-  # Step 3: Get the tag name from the git push command
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'get-tag-name'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        TAG_NAME=$(git describe --tags --abbrev=0)
-        echo "TAG_NAME=${TAG_NAME}" >> $BASH_ENV
-
 artifacts:
   objects:
-    location: 'gs://bucket_name/main/${TAG_NAME}/'
+    location: 'gs://bucket_name/main/${_TAG_NAME}/'
     paths: ['dist/**']
 options:
   logging: CLOUD_LOGGING_ONLY
