@@ -1,13 +1,16 @@
+steps:
+  # Install Go (if needed)
   - name: 'golang:1.20'
-    id: 'setup-go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        apt-get update && apt-get install -y golang-go
-        go mod edit -go 1.20
-        go version
-        go mod download
+    entrypoint: 'go'
+    args: ['version']
+
+  # Install GoReleaser
+  - name: 'golang:1.20'
+    entrypoint: 'go'
+    args: ['install', 'github.com/goreleaser/goreleaser@latest']
+    env:
+      - 'GO111MODULE=on'
+
 
 
 
