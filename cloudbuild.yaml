@@ -1,6 +1,6 @@
 steps:
   # Install Go (if needed)
-  - name: 'golang:1.23.0'
+  - name: 'golang:1.20'
     id: 'setup-go'
     entrypoint: 'bash'
     args:
@@ -10,14 +10,14 @@ steps:
         go mod download
 
   # Install GoReleaser
-  - name: 'golang:1.23.0'
+  - name: 'golang:1.20'
     entrypoint: 'go'
     args: ['install', 'github.com/goreleaser/goreleaser@latest']
     env:
       - 'GO111MODULE=on'
 
   # Run GoReleaser
-  - name: 'golang:1.23.0'
+  - name: 'golang:1.20'
     entrypoint: 'goreleaser'
     args: ['release', '--rm-dist']
     env:
