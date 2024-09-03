@@ -16,7 +16,7 @@ steps:
     args:
       - '-c'
       - |
-        goreleaser --config .goreleaser.yaml --rm-dist
+        goreleaser --config .goreleaser.yaml
 
 # Specify the logs bucket to resolve the build error
 logsBucket: 'gs://dev-docs-releases'
