@@ -39,5 +39,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
-  machineType: 'e2-medium'
   substitutionOption: 'ALLOW_LOOSE'
