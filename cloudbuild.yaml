@@ -16,12 +16,11 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml
-        goreleaser --config .goreleaser.yaml --snapshot
 # Specify the logs bucket to resolve the build error
 logsBucket: 'gs://dev-docs-releases'
 # Upload the build artifacts to your GCS bucket
 artifacts:
   objects:
-    location: 'gs://dev-docs-releases/main/${TAG_NAME}/'
+    location: 'gs://dev-docs-releases/main/${{TAG_NAME}}/'
     paths: ['dist/**']  # Upload all files from the dist/ directory
 timeout: 1200s  # Optional: Increase timeout if necessary
