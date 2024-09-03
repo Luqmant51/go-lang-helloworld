@@ -1,5 +1,5 @@
 steps:
-  # Step to set up Go
+  # Step to set up Go environment
   - name: 'golang:1.20'
     id: 'setup-go'
     entrypoint: 'bash'
@@ -15,8 +15,18 @@ steps:
     args:
       - '-c'
       - |
-        apk add --no-cache curl
+        apk add --no-cache curl git
         curl -sL https://git.io/goreleaser | sh
+
+  # Step to fetch Git tags (if needed)
+  - name: 'alpine:latest'
+    id: 'fetch-git-tags'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        apk add --no-cache git
+        git fetch --tags
 
   # Step to run GoReleaser
   - name: 'alpine:latest'
