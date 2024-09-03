@@ -23,4 +23,4 @@ steps:
     args: ['-m', 'cp', '-r', 'dist/*', 'gs://your-bucket-name/']
 
 # Set the timeout for the build (optional)
-timeout: '1800s'
+timeout: '1800s'
