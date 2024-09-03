@@ -16,12 +16,6 @@ builds:
 release:
   disable: false
 
-archives:
-  - format: tar.gz
-    files:
-      - dist/*
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-
 blobs:
   - provider: gs
     bucket: dev-docs-releases
