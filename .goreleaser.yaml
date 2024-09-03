@@ -20,8 +20,6 @@ blobs:
   - provider: gs
     bucket: dev-docs-releases
     directory: "main/{{ .Version }}"
-    extra_files: 
-      - ./dist/*
 
 archives:
   - format: tar.gz

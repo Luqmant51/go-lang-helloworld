@@ -15,7 +15,6 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml
-        goreleaser --config .goreleaser.yaml --debug
         goreleaser --config .goreleaser.yaml --snapshot
 
 timeout: 1200s
