@@ -14,3 +14,7 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml
+
+timeout: 1200s
+options:
+  logging: CLOUD_LOGGING_ONLY
