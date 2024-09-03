@@ -17,13 +17,7 @@ builds:
       - arm64
 
 release:
-  disable: true
-
-archives:
-  - format: tar.gz
-    files:
-      - dist/*
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  disable: false
 
 blobs:
   - provider: gs
