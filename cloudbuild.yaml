@@ -1,24 +1,26 @@
 steps:
-  # Step 1: Set up Go environment with Go 1.23.0
-  - name: 'golang:1.23.0'
-    id: 'setup-go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        go version
-        go mod download  
-  - name: 'goreleaser/goreleaser:latest'
-    id: 'run-goreleaser'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        goreleaser --config .goreleaser.yaml
-        goreleaser --config .goreleaser.yaml --snapshot
+  # Install Go
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['install', '.']
+    env: ['GO111MODULE=on']
 
-timeout: 1200s
-options:
-  logging: CLOUD_LOGGING_ONLY
-  pool:
-    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
+  # Install GoReleaser
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['install', 'github.com/goreleaser/goreleaser@latest']
+    env: ['GO111MODULE=on']
+
+  # Run GoReleaser
+  - name: 'gcr.io/cloud-builders/go'
+    entrypoint: 'goreleaser'
+    args: ['release', '--rm-dist']
+    env:
+      - 'GOPATH=/workspace/go'
+      - 'GOBIN=/workspace/go/bin'
+      - 'PATH=/workspace/go/bin:$PATH'
+
+  # Upload artifacts to Google Cloud Storage
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['-m', 'cp', '-r', 'dist/*', 'gs://your-bucket-name/']
+
+# Set the timeout for the build (optional)
+timeout: '1800s'
