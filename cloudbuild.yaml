@@ -1,6 +1,6 @@
 steps:
   # Install Go (if needed)
-  - name: 'golang:1.20'
+  - name: 'golang:1.23.0'
     entrypoint: 'go'
     args: ['version']
 
@@ -27,7 +27,7 @@ steps:
     script: |
       #!/usr/bin/env bash
       if [ ! -z "$TAG_NAME" ]; then
-        gcloud storage cp ./dist/* gs://dev-docs-releases/dist
+        gcloud storage cp ./dist/* gs://dev-docs-releases/main/{{$TAG_NAME}}/
 
 # Set the timeout for the build (optional)
 timeout: '1800s'
