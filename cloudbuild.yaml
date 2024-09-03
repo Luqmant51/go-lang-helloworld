@@ -1,8 +1,17 @@
-substitutions:
-  _TAG_NAME: $(git describe --tags --abbrev=0)
-
 steps:
-  # Step 1: Set up Go environment with Go 1.23.0
+  # Step 1: Install git
+  - name: 'gcr.io/cloud-builders/git'
+    id: 'install-git'
+    args: ['git', 'version']
+
+  # Step 2: Get the tag name
+  - name: 'gcr.io/cloud-builders/git'
+    id: 'get-tag-name'
+    args: ['git', 'describe', '--tags', '--abbrev=0']
+    env:
+      - '_TAG_NAME=$$(git describe --tags --abbrev=0)'
+
+  # Step 3: Set up Go environment with Go 1.23.0
   - name: 'golang:1.23.0'
     id: 'setup-go'
     entrypoint: 'bash'
@@ -12,7 +21,7 @@ steps:
         go version
         go mod download  # Download Go module dependencies
 
-  # Step 2: Run GoReleaser using its Docker image
+  # Step 4: Run GoReleaser using its Docker image
   - name: 'goreleaser/goreleaser:latest'
     id: 'run-goreleaser'
     entrypoint: 'sh'
@@ -30,4 +39,5 @@ options:
   logging: CLOUD_LOGGING_ONLY
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
+  machineType: 'e2-medium'
   substitutionOption: 'ALLOW_LOOSE'
