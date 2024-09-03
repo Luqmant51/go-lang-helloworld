@@ -24,9 +24,9 @@ steps:
     script: |
       #!/usr/bin/env bash
       if [ ! -z "$TAG_NAME" ]; then
-        gcloud storage cp ./dist/* gs://dev-docs-releases/main/$TAG_NAME/
+        gcloud storage cp --recursive ./dist/* gs://dev-docs-releases/main/$TAG_NAME/
       else
-          gcloud storage cp ./dist/* gs://dev-docs-releases/main/dist/
+        gcloud storage cp --recursive ./dist/* gs://dev-docs-releases/main/dist/
       fi
 options:
   logging: CLOUD_LOGGING_ONLY
