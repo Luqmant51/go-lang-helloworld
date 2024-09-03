@@ -23,10 +23,11 @@ steps:
 
 artifacts:
   objects:
-    location: 'gs://bucket_name/main/${COMMIT_TAG}/'
+    location: 'gs://bucket_name/main/${_TAG_NAME}/'
     paths: ['dist/**']
 
 options:
   logging: CLOUD_LOGGING_ONLY
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
+  substitutionOption: 'ALLOW_LOOSE'
