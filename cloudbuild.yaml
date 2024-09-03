@@ -40,3 +40,4 @@ options:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
   env:
     - 'PATH=/workspace/go/bin:$$PATH'
+    
