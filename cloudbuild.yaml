@@ -1,10 +1,16 @@
 steps:
-  - name: 'goreleaser/goreleaser'  # GoReleaser Docker image
-    id: 'release'
+  - name: 'golang:1.23.0'
+    id: 'setup-go'
     entrypoint: 'bash'
     args:
-    - goreleaser release --config .goreleaser.yaml
-
-timeout: 1200s
-options:
-  logging: CLOUD_LOGGING_ONLY
+      - '-c'
+      - |
+        go version
+        go mod download  
+  - name: 'goreleaser/goreleaser:latest'
+    id: 'run-goreleaser'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        goreleaser --config .goreleaser.yaml
