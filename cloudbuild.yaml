@@ -1,4 +1,5 @@
 steps:
+  # Step 1: Set up Go environment with Go 1.23.0
   - name: 'golang:1.23.0'
     id: 'setup-go'
     entrypoint: 'bash'
@@ -14,7 +15,10 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml
+        goreleaser --config .goreleaser.yaml --snapshot
 
 timeout: 1200s
 options:
   logging: CLOUD_LOGGING_ONLY
+  pool:
+    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
