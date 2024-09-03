@@ -23,8 +23,9 @@ steps:
 
 artifacts:
   objects:
-    location: 'gs://bucket_name/main/${_TAG_NAME}/'
+    location: 'gs://bucket_name/main/${COMMIT_TAG}/'
     paths: ['dist/**']
+
 options:
   logging: CLOUD_LOGGING_ONLY
   pool:
