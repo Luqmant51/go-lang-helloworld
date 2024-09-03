@@ -11,12 +11,14 @@ steps:
 
   # Run GoReleaser
   - name: 'gcr.io/cloud-builders/go'
-    entrypoint: 'goreleaser'
-    args: ['release', '--rm-dist']
-    env:
-      - 'GOPATH=/workspace/go'
-      - 'GOBIN=/workspace/go/bin'
-      - 'PATH=/workspace/go/bin:$PATH'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        export GOPATH=/workspace/go
+        export GOBIN=/workspace/go/bin
+        export PATH=$GOBIN:$PATH
+        goreleaser release --rm-dist
 
   # Upload artifacts to Google Cloud Storage
   - name: 'gcr.io/cloud-builders/gsutil'
