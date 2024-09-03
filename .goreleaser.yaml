@@ -22,7 +22,7 @@ release:
 blobs:
   - provider: gs
     bucket: dev-docs-releases
-    directory: "{{ .Version }}"
+    directory: "main/{{ .Version }}"
 
 archives:
   - format: tar.gz
