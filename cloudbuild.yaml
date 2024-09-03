@@ -1,22 +1,29 @@
-steps:
-  # Step 1: Set up Go environment with Go 1.23.0
-  - name: 'golang:1.23.0'
-    id: 'setup-go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        go version
-        go mod download  # Download Go module dependencies
+# Step 1: Set up Go environment with Go 1.23.0
+- name: 'golang:1.23.0'
+  id: 'setup-go'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      go version
+      go mod download  # Download Go module dependencies
 
-  # Step 2: Run GoReleaser using its Docker image
-  - name: 'goreleaser/goreleaser:latest'
-    id: 'run-goreleaser'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        goreleaser --config .goreleaser.yaml
+- name: 'goreleaser/goreleaser:latest'
+  id: 'verify-goreleaser-version'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+      goreleaser --version
+
+# Step 3: Run GoReleaser without --rm-dist flag
+- name: 'goreleaser/goreleaser:latest'
+  id: 'run-goreleaser'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+      goreleaser --config .goreleaser.yaml
 
 # Specify the logs bucket to resolve the build error
 logsBucket: 'gs://dev-docs-releases'
