@@ -27,7 +27,9 @@ steps:
     script: |
       #!/usr/bin/env bash
       if [ ! -z "$TAG_NAME" ]; then
-        gcloud storage cp ./dist/* gs://dev-docs-releases/main/"$TAG_NAME"
+        gcloud storage cp ./dist/* gs://dev-docs-releases/main/$TAG_NAME
+      else
+        gcloud storage cp ./dist/* gs://dev-docs-releases/dist
 
 options:
   # Use only Cloud Logging for logging
