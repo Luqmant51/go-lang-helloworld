@@ -31,13 +31,11 @@ steps:
 
 # Set the timeout for the build (optional)
 timeout: '1800s'
-build:
+options:
   logging: CLOUD_LOGGING_ONLY
+  pool:
+    name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/dev-docs-pool'
 
-# Substitutions
-substitutions:
-  _BUCKET_NAME: your-bucket-name  # Default value, can be overridden
-  _TAG_NAME: v0.0.0  # Default value, should be overridden when triggering the build
 
 # You can specify options here
 options:
