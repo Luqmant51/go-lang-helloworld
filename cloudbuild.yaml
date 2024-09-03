@@ -36,3 +36,6 @@ steps:
       - '-c'
       - |
         goreleaser --config .goreleaser.yaml
+
+  options:
+    logging: 'CLOUD_LOGGING_ONLY'
