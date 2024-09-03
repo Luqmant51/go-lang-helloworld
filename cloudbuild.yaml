@@ -16,7 +16,7 @@ steps:
     args:
       - '-c'
       - |
-        goreleaser release
+        goreleaser release --snapshot --rm-dist
 # Upload artifacts to Google Cloud Storage
   - id: "Upload dist to storage"
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
