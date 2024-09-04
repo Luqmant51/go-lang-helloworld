@@ -14,12 +14,7 @@ builds:
       - arm
       - arm64
 release:
-  disable: true
-
-blobs:
-  - provider: gs
-    bucket: dev-docs-releases
-    directory: "{{ .Version }}"
+  disable: trueES
 
 archives:
   - format: tar.gz
